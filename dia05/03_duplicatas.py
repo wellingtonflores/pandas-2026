@@ -16,5 +16,5 @@ df = df.sort_values("salario", ascending=False).drop_duplicates(
     keep="last", subset=["nome", "sobrenome"]
 )
 
-
+df
 # %%
