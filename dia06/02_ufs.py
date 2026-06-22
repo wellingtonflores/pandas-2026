@@ -50,7 +50,7 @@ uf
 
 # %%
 def mi_to_perhund(mi):
-    return float(mi.replace(",", ".").replace("‰", "")) / 1000
+    return float(mi.replace(",", ".").replace("‰", ""))
 
 
 uf["Mortalidade infantil (2016)"] = uf["Mortalidade infantil (2016)"].apply(
@@ -77,4 +77,33 @@ def uf_abreviacao_to_regiao(abrev):
 uf["Região"] = uf["Abreviação"].apply(uf_abreviacao_to_regiao)
 
 # %%
-uf
+uf.head().info()
+
+# %%
+
+# Se PIB / Capita > 30.000
+# +
+# Mort Infantil < 15 / 1000
+# +
+# IDH (2010) > 700
+# -> "Parece bom"
+
+# Não parece bom
+
+uf["PIB per capita (R$) (2015)"] = uf["PIB per capita (R$) (2015)"].apply(str_to_float)
+
+
+def looks_good(row):
+    pib = row["PIB per capita (R$) (2015)"]
+    mort_infantil = row["Mortalidade infantil (2016)"]
+    idh = row["IDH (2010)"]
+
+    if pib > 30000 and mort_infantil < 15 and idh > 700:
+        return "Parece bom"
+    return "Não parece bom"
+
+
+uf["Cenário"] = uf.apply(looks_good, axis=1)
+# %%
+uf.loc[11]
+# %%
